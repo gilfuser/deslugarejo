@@ -1,0 +1,56 @@
+{
+  "name": "deslugar",
+  "productName": "Deslugar: non-local jamming",
+  "version": "1.0.0",
+  "description": "non-local jamming",
+  "author": "Gil Fuser <gilfuser@gmail.com>",
+  "private": true,
+  "main": "main.js",
+  "build": {
+    "appId": "com.deslugar.app",
+    "directories": {
+      "buildResources": "static"
+    }
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=DEV electron .",
+    "build": "nuxt build && electron-builder",
+    "package-mac": "nuxt build && electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win32": "nuxt build && electron-packager . deslugar --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Deslugar\"",
+    "package-win64": "nuxt build && electron-packager . deslugar --overwrite --asar=true --platform=win64 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Deslugar\"",
+    "package-linux": "nuxt build && electron-packager . deslugar --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.4",
+    "@fortawesome/free-brands-svg-icons": "^5.3.1",
+    "@fortawesome/free-regular-svg-icons": "^5.3.1",
+    "@fortawesome/free-solid-svg-icons": "^5.3.1",
+    "@fortawesome/vue-fontawesome": "^0.1.1",
+    "bulma": "^0.7.1",
+    "node-osc": "^2.1.0",
+    "nuxt-edge": "^2.0.0-25607354.1e02195",
+    "nuxt-fontawesome": "^0.3.0",
+    "nuxt-sass-resources-loader": "^2.0.5",
+    "signalhub": "^4.9.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "webrtc-swarm": "^2.9.0",
+    "wrtc": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "cross-env": "^5.1.4",
+    "css-loader": "^1.0.0",
+    "electron": "^2.0.9",
+    "electron-devtools-installer": "^2.2.3",
+    "electron-packager": "^12.1.1",
+    "eslint": "^4.15.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-vue": "^4.0.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "vue-loader": "^15.4.2",
+    "vue-style-loader": "^4.1.2"
+  }
+}

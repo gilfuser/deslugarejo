@@ -1,0 +1,29 @@
+// File: assets/main.scss
+// 1. Import the initial variables
+// @import "../node_modules/bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/utilities/_all.sass";
+
+// 2. Set your own initial variables
+// Update blue
+$blue: #72d0eb;
+// Add pink and its invert
+$pink: #ffb3b3;
+$pink-invert: #fff;
+// Add a serif family
+
+// Responsiveness
+
+// The container horizontal gap, which acts as the offset for breakpoints
+$gap: 32px !default;
+// 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
+// $tablet: 769px !default;
+$tablet: 740px !default;
+// 960px container + 4rem
+// $desktop: 960px + (2 * $gap) !default;
+$desktop: 740px + (2 * $gap) !default;
+// 1152px container + 4rem
+$widescreen: 1152px + (2 * $gap) !default;
+$widescreen-enabled: true !default;
+// 1344px container + 4rem
+
+@import "~bulma/bulma";
