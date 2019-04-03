@@ -1,17 +1,22 @@
-# deslugar
+# deslugarejo
 
-> non-local jamming
+> P2P OSC Communication
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-$ npm install # Or yarn install
+$ yarn install
 
-# development with vue devtools
-$ npm run dev
+# serve with hot reload at localhost:3000
+$ yarn run dev
 
-# build for production
-$ npm run build
+# build for production and launch server
+$ yarn run build
+$ yarn start
 
-For detailed explanation on how things work, checkout [Nuxt.js](https://github.com/nuxt/nuxt.js), [Electron.js](https://electronjs.org/), and [electron-builder](https://www.electron.build/).
+# generate static project
+$ yarn run generate
+```
+
+For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
