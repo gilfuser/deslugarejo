@@ -47,7 +47,7 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // '@nuxtjs/pwa',
-    // '@nuxtjs/dotenv',
+    '@nuxtjs/dotenv',
     '@nuxtjs/vuetify'
   ],
   /*
@@ -129,12 +129,12 @@ module.exports = {
   dev: process.env.NODE_ENV === 'DEV',
 
   env: {
-    apiKey: 'AIzaSyD4uQGKCqb0yQGSnRrLIIgp1KsMC4EDtK4',
-    authDomain: 'deslugarejo-db.firebaseapp.com',
-    databaseURL: 'https://deslugarejo-db.firebaseio.com',
-    projectId: 'deslugarejo-db',
-    storageBucket: 'deslugarejo-db.appspot.com',
-    messagingSenderId: '956505351808',
-    WS_URL: process.env.WS_URL || 'http://localhost:3000'
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    databaseURL: process.env.databaseURL,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    WS_URL: process.env.WS_URL
   }
 }
