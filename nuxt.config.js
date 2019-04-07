@@ -36,8 +36,7 @@ module.exports = {
   plugins: [
     '~/plugins/fontawesome.js',
     '~/plugins/moment.js',
-    '~/plugins/directives.js',
-    '~/plugins/async-computed.js',
+    '~/plugins/firebase.js',
     { src: '~/plugins/swarm.js', ssr: false }
   ],
 
@@ -48,6 +47,7 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // '@nuxtjs/pwa',
+    // '@nuxtjs/dotenv',
     '@nuxtjs/vuetify'
   ],
   /*
@@ -129,12 +129,12 @@ module.exports = {
   dev: process.env.NODE_ENV === 'DEV',
 
   env: {
-    apiKey: 'AIzaSyBIA8yxivEVkYJ7ShqQvgeeeZh7YCnoUg8',
-    authDomain: 'deslugar-database.firebaseapp.com',
-    databaseURL: 'https://deslugar-database.firebaseio.com',
-    projectId: 'deslugar-database',
-    storageBucket: 'deslugar-database.appspot.com',
-    messagingSenderId: '233586634285',
+    apiKey: 'AIzaSyD4uQGKCqb0yQGSnRrLIIgp1KsMC4EDtK4',
+    authDomain: 'deslugarejo-db.firebaseapp.com',
+    databaseURL: 'https://deslugarejo-db.firebaseio.com',
+    projectId: 'deslugarejo-db',
+    storageBucket: 'deslugarejo-db.appspot.com',
+    messagingSenderId: '956505351808',
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
   }
 }

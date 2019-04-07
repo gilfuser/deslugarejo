@@ -1,11 +1,5 @@
 /* eslint-disable prettier/prettier */
 import Vuex from 'vuex'
-import firebase from '~/plugins/firebase.js'
-// eslint-disable-next-line no-unused-vars
-import { firebaseMutations, firebaseAction } from 'vuexfire'
-const db = firebase.database()
-// eslint-disable-next-line no-unused-vars
-const usersRef = db.ref('/users')
 
 const createStore = () => {
   return new Vuex.Store({
@@ -31,83 +25,10 @@ const createStore = () => {
         uuid: undefined,
         description: undefined,
         date: undefined,
-        joinedIn: []
+        joinedIn: [],
+        oscClient: {}
       },
-      oscClient: {
-        host: undefined,
-        port: undefined
-      },
-      incomingMsgs: [
-        {
-          from: 'Zezé Totó',
-          address: '/incoming/',
-          argument: 0.2
-        },
-        {
-          from: 'marineide',
-          address: '/inc2/',
-          argument: 0.4
-        }
-      ],
-      outgoingMsgs: [
-        {
-          address: '/outgoing/',
-          argument: 0.2
-        },
-        {
-          address: '/out2/',
-          argument: 0.4
-        }
-      ],
       loadedChannels: [
-        {
-          label: 'aldaslk',
-          type: 'all-2-all',
-          uuid: 'adc',
-          description: 'Um canal paranormal!',
-          date: '2018-09-17',
-          joinedIn: [],
-          isJoined: false
-        },
-        // { divider: true, inset: true },
-        {
-          label: 'openGLMadness',
-          type: 'one-2-all',
-          uuid: 'bumba!',
-          description:
-            "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-          date: '2018-09-18',
-          joinedIn: [],
-          isJoined: false
-        },
-        // { divider: true, inset: true },
-        {
-          label: 'SuperCollider_RULEZ',
-          type: 'all-2-all',
-          uuid: 'f',
-          description: '',
-          date: '2018-09-19',
-          joinedIn: [],
-          isJoined: false
-        },
-        {
-          label: 'Xaxa',
-          type: 'all-2-all',
-          uuid: 'Bloblabli',
-          description: 'erpqiweruodjfaösldkfjasödf',
-          date: '2019-3-26-19-15-97',
-          joinedIn: ['Bloblabli'],
-          isJoined: false
-        },
-        {
-          label: 'LetsDoit',
-          type: 'all-2-all',
-          uuid: 'Cocoa',
-          description: 'aöskldfjasöldkfjaöskldjf',
-          date: '2019-3-27-12-24-49',
-          joinedIn: ['Cocoa'],
-          isJoined: false
-        },
         {
           label: 'POIU',
           type: 'all-2-all',
@@ -168,57 +89,33 @@ const createStore = () => {
       },
       oscclientPort (state, payload) {
         state.oscClient.port = payload
-      },
-      ...firebaseMutations
+      }
     },
     actions: {
       signUserUp ({ commit, state }, payload) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(payload.email, payload.password)
-          .then(
-            user => {
-              user.updateProfile({
-                displayName: payload.name
-              }).then(
-                () => {
-                  const newUser = {
-                    id: user.uid
-                    // openedChannels: []
-                  }
-                  // eslint-disable-next-line no-console
-                  console.log('user id: ', user.uid)
-                  commit('setUser', newUser) // TODO: this is not working
-                  // },
-                  commit('setMenuItems', {
-                  // {
-                    // icon: 'apps',
-                    // title: 'Welcome', to: '/' },
-                    createdChannels: {},
-                    createChannel: {
-                      // icon: 'radio',
-                      title: 'Create Channel',
-                      to: '/createChannel'
-                    },
-                    joinChannel: {
-                      // icon: 'radio',
-                      title: 'Join Channel',
-                      to: '/joinChannel'
-                    }, // TODO: fetch it from firebase
-                    name: {
-                      // icon: 'person',
-                      title: state.name,
-                      to: '/about'
-                    }
-                  })
-                }
-              )
-            }
-          )
-          .catch(error => {
-            // eslint-disable-next-line no-console
-            console.log(error)
-          })
+        commit('setUser', payload)
+        commit('isConnected', true)
+        commit('setMenuItems', {
+          // {
+          // icon: 'apps',
+          // title: 'Welcome', to: '/' },
+          createdChannels: {},
+          createChannel: {
+            // icon: 'radio',
+            title: 'Create Channel',
+            to: '/createChannel'
+          },
+          joinChannel: {
+            // icon: 'radio',
+            title: 'Join Channel',
+            to: '/joinChannel'
+          }, // TODO: fetch it from firebase
+          name: {
+            // icon: 'person',
+            title: state.name,
+            to: '/about'
+          }
+        })
       },
       onCreateSwarm ({ commit }, payload) {
         return new Promise((resolve, reject) => {
@@ -241,6 +138,7 @@ const createStore = () => {
         }
       },
       user: state => state.user,
+      name: state => state.name,
       channel: state => state.channel,
       swarms: state => (chan) => {
         return state.swarms.find(swarm => swarm.channelConfig.label === chan)

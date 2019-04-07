@@ -6,7 +6,7 @@
           <v-toolbar color="blueDarker" flat dense>
             <v-toolbar-title>Create Channel</v-toolbar-title>
           </v-toolbar>
-          <form @submit.prevent="onCreateChannel"
+          <form @submit.prevent="writeToFirestore"
           class="mx-4"
           prepend-icon="radio"
           >
@@ -70,9 +70,7 @@
 <script>
   import { validationMixin } from "vuelidate"
   import { required, minLength, maxLength } from "vuelidate/lib/validators"
-  // import signalhub from 'signalhub'
-  // import createSwarm from 'webrtc-swarm'
-  // import wrtc from 'wrtc'
+import {fireDb} from '~/plugins/firebase.js'
 
   export default {
     name: 'create-channel',
@@ -144,45 +142,24 @@
           this.$router.push(this.channel.to)
           // this.$store.dispatch('onCreateSwarm', this.channel)
           // this.$store.state.channel = this.label
-          // createSwarm(
-          //   signalhub(that.channel.label, ['https://serversignaling.herokuapp.com/']),
-          //   {
-          //     initiator: true,
-          //     wrtc,
-          //     uuid: that.$store.state.name,
-          //     trikle: false,
-          //     channelConfig: {
-          //       // eslint-disable-next-line no-undef
-          //       label: that.channel.label,
-          //       reliable: false,
-          //       maxRetransmits: 0,
-          //       ordered: false
-          //       // TODO: Put the id in a data bank together with uuid
-          //       // {uuid: zezé, id:123456} and fetch the label when a peer join a channel
-          //       // options: { id: 123456 }
-          //     }
-          //   }
-          // )
-        //   alert('in the swarm');
-        //   that.$store.commit.isConnected = true
-        //   // that.$emit('connect', that.connected);
-        //   // that.$emit('nextComponent', that.nextComponent)
-        //   peer.on('data', (data) => {
-        //     that.incomingMsg = data.toString().split(',')
-        //     console.log(`incoming osc: ${that.incomingMsg}`);
-        //     socket.emit('incoming', that.incomingMsg)
-        //   })
-        // });
-          // console.log(this.createdChannel)
-          // console.log(typeof this.createdChannel)
-          // that.$store.dispatch('onCreateSwarm')
-          // that.$emit('signaling', response.statusText)
-          
         }).catch((error) => {
           that.status = 'An error occurred:' + error
         });
         }
       },
+      async writeToFirestore() {
+        const ref = fireDb.collection("channels").doc("test")
+        const document = {
+          text: "This is a test message."
+        }
+        try {
+          await ref.set(document)
+        } catch (e) {
+          // TODO: error handling
+          console.error(e)
+        }
+        // this.writeSuccessful = true
+      }
     },
   }
 </script>
