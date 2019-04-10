@@ -11,6 +11,7 @@
         <form 
         min-width="250px"
         class="mx-4"
+        @submit.prevent=""
         >
           <v-text-field
           :counter="20"
@@ -20,18 +21,18 @@
           class="mt-3 px-5"
           @input="setName"
           id="name"
-          @keyup.enter="setName"
           ></v-text-field>
+          <!-- v-on:keyup.enter.native="$event.target.firebaseui-container.focus()" -->
           <v-spacer style="margin-top: 10px"></v-spacer>
           </form>
           <v-flex shrink>
 
           <v-card class="gray4 pb-3 mt-4">
-            <no-ssr>
+            <!-- <no-ssr> -->
             <v-expand-transition>
               <firebase-ui v-show="name.length > 0"/>
             </v-expand-transition>
-            </no-ssr>
+            <!-- </no-ssr> -->
           </v-card>
           </v-flex>
         </v-card>

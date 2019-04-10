@@ -6,25 +6,25 @@
           <v-toolbar color="blueDarker" flat dense>
             <v-toolbar-title>Create Channel</v-toolbar-title>
           </v-toolbar>
-          <form @submit.prevent="writeToFirestore"
+          <form @submit.prevent="onCreateChannel"
           class="mx-4"
           prepend-icon="radio"
           >
+            <!-- :error-messages="labelErrors" -->
             <v-text-field
             v-model="label"
-            :error-messages="labelErrors"
             :counter="20"
             label="Channel Name"
             ref="label"
             required
             autofocus
             class="mt-3"
-            @input="$v.label.$touch()"
-            @blur="$v.label.$touch()"
             ></v-text-field>
+            <!-- @input="$v.label.$touch()"
+            @blur="$v.label.$touch()" -->
+            <!-- :error-messages="descriptionErrors" -->
             <v-textarea
             v-model="description"
-            :error-messages="descriptionErrors"
             maxlength="200"
             auto-grow
             rows="3"
@@ -32,9 +32,9 @@
             :counter="200"
             label="Description"
             required
-            @input="$v.description.$touch()"
-            @blur="$v.description.$touch()"
             ></v-textarea>
+            <!-- @input="$v.description.$touch()"
+            @blur="$v.description.$touch()" -->
             <v-radio-group
             label="Channel Type"
             v-model="type"
@@ -55,7 +55,7 @@
               type="submit"
               depressed
               style="margin-left:-5px"
-              @click="date = $moment().format('Y-M-D-HH-mm-SS')"
+              @click="date = new Date()"
               >
                 Submit
               </v-btn>
@@ -68,57 +68,58 @@
 </template>
 
 <script>
-  import { validationMixin } from "vuelidate"
-  import { required, minLength, maxLength } from "vuelidate/lib/validators"
-import {fireDb} from '~/plugins/firebase.js'
+  // import { validationMixin } from "vuelidate"
+  // import { required, minLength, maxLength } from "vuelidate/lib/validators"
+  import {fireDb} from '~/plugins/firebase.js'
+  import { mapGetters, mapMutations } from 'vuex'
 
   export default {
-    name: 'create-channel',
-    mixins: [validationMixin],
+    name: 'createChannel',
+    // mixins: [validationMixin],
     data: () => ({
-      label: '',
+      label: null,
       type: 'all-to-all',
-      description: '',
-      date: undefined,
+      description: null,
+      date: null,
       connected: false,
       status: undefined,
       submitStatus: null,
       channel: {}
     }),
-    validations: {
-        label: {
-          required,
-          maxLength: maxLength(20)
-        },
-        description: {
-          required,
-          minLength: minLength(20),
-          maxLength: maxLength(200)
-        },
-    },
+    // validations: {
+    //     label: {
+    //       required,
+    //       maxLength: maxLength(20)
+    //     },
+    //     description: {
+    //       required,
+    //       minLength: minLength(20),
+    //       maxLength: maxLength(200)
+    //     },
+    // },
     computed: {
-      labelErrors () {
-        const errors = []
-        if (!this.$v.label.$dirty) return errors
-        !this.$v.label.maxLength && errors.push('Channel label must be at most 20 characters long')
-      !this.$v.label.required && errors.push('Channel label is required.')
-      return errors
-      },
-      descriptionErrors () {
-        const errors = []
-        if (!this.$v.description.$dirty) return errors
-        !this.$v.description.maxLength && errors.push('Description must be at most 200 characters long')
-        !this.$v.description.minLength && errors.push('Description must be at least 20 characters long')
-      !this.$v.description.required && errors.push('Description is required.')
-      return errors
-      },
+      // labelErrors () {
+      //   const errors = []
+      //   if (!this.$v.label.$dirty) return errors
+      //   !this.$v.label.maxLength && errors.push('Channel label must be at most 20 characters long')
+      // !this.$v.label.required && errors.push('Channel label is required.')
+      // return errors
+      // },
+      // descriptionErrors () {
+      //   const errors = []
+      //   if (!this.$v.description.$dirty) return errors
+      //   !this.$v.description.maxLength && errors.push('Description must be at most 200 characters long')
+      //   !this.$v.description.minLength && errors.push('Description must be at least 20 characters long')
+      // !this.$v.description.required && errors.push('Description is required.')
+      // return errors
+      // },
     },
     methods: {
       onCreateChannel () {
-        this.$v.$touch()
-        if (this.$v.$invalid) {
-          this.submitStatus = 'ERROR'
-        } else {
+        // this.$v.$touch()
+        // if (this.$v.$invalid) {
+        //   this.submitStatus = 'ERROR'
+        // } else {
         // this.$store.commit('createChannel', this.channel)
         this.channel = {
           title: this.label,
@@ -129,31 +130,40 @@ import {fireDb} from '~/plugins/firebase.js'
           initiator: true,
           swarm: false,
           description: this.description,
-          date: this.date,
+          releasedAt: this.date,
           joinedIn: [this.$store.state.name],
+          oscClient: {
+            host: null,
+            port: null
           }
-        this.$store.commit('setInitiator', true)
+          }
+        console.log('this channel: ', this.channel);
         // this.swarm = this.$store.getters.swarm
         // this.$emit('setSwarm', that.swarm)
         // this.$emit('signaling', 'connecting...')
+        let that = this
         this.$axios.get(`https://serversignaling.herokuapp.com`)
         .then((response) => {
-          this.$store.commit('createChannel', this.channel)
+          this.$store.commit('setInitiator', true)
+          this.$store.commit('setChannel', this.channel)
           this.$router.push(this.channel.to)
+          this.writeToFirestore()
           // this.$store.dispatch('onCreateSwarm', this.channel)
           // this.$store.state.channel = this.label
         }).catch((error) => {
-          that.status = 'An error occurred:' + error
+          console.log('An error occurred: ', error)
         });
-        }
+        // }
       },
+      // ...mapMutations({
+      //   setInitiator: ('channels/setInitiator', true)
+      //   createChannel: 
+      // }),
       async writeToFirestore() {
-        const ref = fireDb.collection("channels").doc("test")
-        const document = {
-          text: "This is a test message."
-        }
+        let that = this
+        const ref = fireDb.collection("channels").doc(this.label)
         try {
-          await ref.set(document)
+          await ref.set(that.channel)
         } catch (e) {
           // TODO: error handling
           console.error(e)

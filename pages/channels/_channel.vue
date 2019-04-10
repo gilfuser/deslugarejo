@@ -54,8 +54,8 @@
               v-model.number="oscClientPort"
             ></v-text-field>
             <v-card-actions>
-              <v-btn color="primary" block depressed @click.prevent="createSwarm">connect it</v-btn>
-              <v-spacer/>
+              <!-- <v-btn color="primary" block depressed @click.prevent="createSwarm">connect it</v-btn>
+              <v-spacer/> -->
               <v-btn color="primary" type="submit" block depressed>set osc client</v-btn>
               <!-- @click.prevent="setOscClient" -->
             </v-card-actions>
@@ -87,7 +87,7 @@
 
 <script>
 import socket from '~/plugins/socket.io.js'
-// import { mapState } from 'vuex';
+// import { mapGetters } from 'vuex';
 
 export default {
   data: () => ({
@@ -106,9 +106,13 @@ export default {
     // msgInValue: undefined
   }),
   computed: {
-    channel() {
-      return this.$store.getters.loadChannel(this.$route.params.channel)
-    },
+    // ...mapGetters({
+      channel() {
+        return this.$store.getters.loadChannel( this.$route.params.channel)
+      }
+      // channel: 'channels/loadChannel'// 
+    // })
+    // },
     // msgOut: {
     //   get: function() {
     //     // return this.msgOutAddr + ' ' + this.msgOutValue
@@ -134,9 +138,11 @@ export default {
   },
   methods: {
     setOscClient() {
+      this.$store.commit('oscClientHost', this.oscClientHost)
+      this.$store.commit('oscClientPort', this.oscClientPort)
       socket.emit('config', {
         server: { port: this.socketPortIn, host: '127.0.0.1' },
-        client: { host: '127.0.0.1', port: this.oscClientPort }
+        client: { host: this.oscClientHost, port: this.oscClientPort }
       })
     },
     createSwarm() {
@@ -147,8 +153,12 @@ export default {
       )
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.createSwarm()
+    })
+  },
   watch: {
-    // if (swarm) {
     swarm: function(swarm) {
       let that = this
       swarm.on('connect', function(peer, id) {
@@ -160,7 +170,6 @@ export default {
             .toString()
             .replace(/,/g, ', ')
             .split(', ')
-          // const tempMsgIn = String.fromCharCode.apply(null, new Uint16Array(data))
           for (let i = 0; i < tempMsgIn.length; i++) {
             if (isNaN(tempMsgIn[i])) {
               that.msgIn.splice(i, 1, tempMsgIn[i])
@@ -172,11 +181,6 @@ export default {
               }
             }
           }
-          // that.msgIn.replace(/,/g, ', ')
-          //new TextDecoder("utf-16le").decode(data)
-          // that.msgIn = data.toString().join.call(that.msgIn, ', ')
-          // that.msgIn = Array.prototype
-          // console.log('incoming osc: ', that.msgIn, 'from peer: ', id)
           that.peers.indexOf(id) === -1 ? that.peers.unshift(id) : ''
         })
       })
@@ -187,7 +191,6 @@ export default {
     }
   },
   beforeMount() {
-    // this.$store.commit('channel', this.channel.label)
     let that = this
     socket.on('outgoing', function(msg) {
 
@@ -207,7 +210,6 @@ export default {
           }
       if (that.connected) {
         that.swarm.peers.forEach(function(peer, uuid) {
-          // peer.send([that.msgOutAddr, that.msgOutValue])
           peer.send(msg)
           console.log('msg to peer', uuid)
           console.log(that.swarm.peers)

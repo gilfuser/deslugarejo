@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center row class="mt-5"
-    wrap v-if="channels.length > 0"
+    wrap v-if="remoteChannels.length > 0"
   >
     <v-flex xs10 sm8 md6 lg4 xl3 >
         <v-toolbar color="blueDarker" flat dense>
@@ -11,7 +11,7 @@
       <div class="grayDark"
       >
       <OthersChannel
-        v-for="(channel, index) in channels"
+        v-for="(channel, index) in remoteChannels"
         :key="index"
         v-bind:channel="channel"
       />
@@ -22,17 +22,35 @@
 
 <script>
   import OthersChannel from '@/components/OthersChannel'
+  import { mapGetters } from 'vuex'
   export default {
     name: 'joinChannel',
     components: { OthersChannel },
     computed: {
-      channels() {
-        return this.$store.getters.remoteChannels 
+      ...mapGetters({
+        remoteChannels: 'remoteChannels'
+      })
+    },
+    mounted() {
+      this.init()
+      this.start()
+    },
+    destroyed () {
+      this.stop()
+    },
+    methods: {
+      init () {
+        this.$store.dispatch('clear')
+      },
+      start () {
+        this.$store.dispatch('startListener')
+      },
+      stop () {
+        this.$store.dispatch('stopListener')
+      },
+      remove (title) {
+        this.$store.dispatch('deleteChannel', { title })
       }
     },
   }
 </script>
-
-<style scoped>
-
-</style>

@@ -43,7 +43,7 @@
     <v-toolbar-items>
       <v-menu 
       offset-y
-      v-if="menuChannels.length > 0"
+      v-if="createdChannels.length > 0"
       >
         <template v-slot:activator="{ on }"
         color="primary"
@@ -55,7 +55,7 @@
         <v-list 
         >
           <v-list-tile
-          v-for="(item, index) in menuChannels"
+          v-for="(item, index) in createdChannels"
           :key="index"
           exact
           router
@@ -80,8 +80,7 @@
             Joined Channels
           </v-btn>
         </template>
-        <v-list 
-        >
+        <v-list>
           <v-list-tile
           v-for="(item, index) in joinedChannels"
           :key="index"
@@ -117,6 +116,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'theNavBar',
   data: () => ({
@@ -126,12 +126,10 @@ export default {
     menuItems () {
       return this.$store.getters.menuItems
     },
-    menuChannels () {
-      return this.$store.getters.createdChannels
-    },
-    joinedChannels () {
-      return this.$store.getters.joinedChannels
-    }
+    ...mapGetters({
+      createdChannels: 'createdChannels',
+      joinedChannels: 'joinedChannels',
+    }),
   },
   methods: {
     setInitTrue () {

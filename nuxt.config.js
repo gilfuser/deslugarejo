@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable nuxt/no-cjs-in-config */
+const vars = require('./envars')
 // eslint-disable-next-line no-unused-vars
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+// if  process.env.NODE_ENV !== 'production')
+// require('dotenv').config()
 const pkg = require('./package')
 
 module.exports = {
@@ -35,7 +38,6 @@ module.exports = {
 
   plugins: [
     '~/plugins/fontawesome.js',
-    '~/plugins/moment.js',
     '~/plugins/firebase.js',
     { src: '~/plugins/swarm.js', ssr: false }
   ],
@@ -47,7 +49,7 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // '@nuxtjs/pwa',
-    // '@nuxtjs/dotenv',
+    '@nuxtjs/dotenv',
     '@nuxtjs/vuetify'
   ],
   /*
@@ -129,13 +131,13 @@ module.exports = {
   dev: process.env.NODE_ENV === 'DEV',
 
   env: {
-    apiKey: 'AIzaSyD4uQGKCqb0yQGSnRrLIIgp1KsMC4EDtK4',
-    authDomain: 'deslugarejo-db.firebaseapp.com',
-    databaseURL: 'https://deslugarejo-db.firebaseio.com',
-    projectId: 'deslugarejo-db',
-    storageBucket: 'deslugarejo-db.appspot.com',
-    messagingSenderId: '956505351808',
-    clientId: '956505351808-ko0d8o5aptpku1o9sp6sofj3j6lkdo5d.apps.googleusercontent.com',
+    apiKey: vars.apiKey,
+    authDomain: vars.authDomain,
+    databaseURL: vars.databaseURL,
+    projectId: vars.projectId,
+    storageBucket: vars.storageBucket,
+    messagingSenderId: vars.messagingSenderId,
+    clientId: vars.clientId,
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
   }
 }

@@ -6,80 +6,65 @@
 </template>
 
 <script>
-import TheNavbar from '@/components/TheNavbar'
-
+import TheNavbar from "@/components/TheNavbar";
+import { mapState } from "vuex";
+import firebase from 'firebase/app'
 export default {
-
-  components: {
-    TheNavbar
-  },
+  components: { TheNavbar },
   data() {
     return {
-      title: 'Deslugarejo'
-    }
+      title: "Deslugarejo",
+      user: null
+    };
   },
-
   computed: {
-    userAuthenticated () {
-      return this.$store.getters.user !== null && this.$store.getters.user !== undefined || this.$store.state.name !== undefined
-    },
+    // userAuthenticated() {
+    //   return (!!this.$store.state.signedIn )
+    // },
     channelCreated () {
       return this.$store.state.createdChannel.label
-    },
+    }
   },
-}
+  mounted () {
+    let that = this
+    firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+            let displayName = user.displayName;
+            let email = user.email;
+            let emailVerified = user.emailVerified;
+            let photoURL = user.photoURL;
+            let uid = user.uid;
+            let phoneNumber = user.phoneNumber;
+            let providerData = user.providerData;
+            user.getIdToken().then(function(accessToken) {
+              that.user = {
+                  displayName: displayName,
+                  email: email,
+                  emailVerified: emailVerified,
+                  phoneNumber: phoneNumber,
+                  photoURL: photoURL,
+                  uid: uid,
+                  accessToken: accessToken,
+                  providerData: providerData
+                }
+            }).then(() => {
+              that.sendUser()
+            });
+          } else {
+            // User is signed out.
+              that.$store.commit('isSignedIn', false)
+              that.$store.commit('signOut', true)
+              that.$store.commit('setUser', null)
+          }
+        }, function(error) {
+          console.log(error);
+        });
+  },
+  methods: {
+    sendUser () {
+      this.$store.dispatch('signIn', this.user)
+    }
+  },
+};
 </script>
-
-<style>
-/* .dark {
-  background: grey-darker
-} */
-/* html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-} */
-
-</style>

@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
-import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/database'
+import 'firebase/firestore'
 
 if (!firebase.apps.length) {
   const config = {
@@ -15,7 +15,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
   // firebase.firestore().settings({ timestampsInSnapshots: true })
 }
-const fireDb = firebase.firestore()
 const authEmail = {
   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
   requireDisplayName: false
@@ -26,4 +25,5 @@ const authGoogle = { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID }
 // const authFB = { provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID }
 const auth = firebase.auth()
 const db = firebase.database()
-export { fireDb, authGoogle, authEmail, auth, db, firebase }
+const fireDb = firebase.firestore()
+export { fireDb, authGoogle, authEmail, auth, db }

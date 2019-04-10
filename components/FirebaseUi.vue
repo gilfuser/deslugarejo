@@ -1,15 +1,28 @@
 <template>
-  <div id="firebaseui-auth-container"/>
+<div id="firebaseui-auth-container">
+  {{ user }}
+  </div>
 </template>
 
 <script>
-import { auth, authGoogle, authEmail, firebase } from '~/plugins/firebase';
+import { auth, authGoogle, authEmail } from '~/plugins/firebase';
 let anonymousUser = auth.user
 
 export default {
   name: 'Login',
+  data() {
+    return {
+      user: null
+    }
+  },
+  methods: {
+    // isSignedIn() {
+    //   this.$store.dispatch('isSignedIn')
+    // }
+  },
   mounted: function () {
     if (process.browser) {
+      let that = this
       let firebaseui = require('firebaseui');
       const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(auth);
       const config = {
@@ -24,13 +37,23 @@ export default {
         ],
         credentialHelper: firebaseui.auth.CredentialHelper.GOOGLE_YOLO,
         autoUpgradeAnonymousUsers: true,
-        // signInSuccessUrl: '/',
-        // tosUrl: '/',
-        // privacyPolicyUrl: '/',
+        signInSuccessUrl: '/',
+        tosUrl: '/',
+        privacyPolicyUrl: '/',
         callbacks: {
-          // signInSuccessWithAuthResult: function () {
-          //   alert('You\'re in')
-          // },
+          signInSuccessWithAuthResult: function (authResult) {
+            // let user = authResult.user
+            // let credential = authResult.credential;
+            // let isNewUser = authResult.additionalUserInfo.isNewUser;
+            // let providerId = authResult.additionalUserInfo.providerId;
+            // let operationType = authResult.operationType;
+            // console.log(user)
+            // that.isSignedIn()
+            // console.log(credential)
+            // console.log('is new user: ' + isNewUser)
+            // console.log('provider ID: ' + providerId)
+            // console.log('operation type: ' + operationType)
+          },
           // uiShown: function () {
           //   console.log('uiShown');
           // },
@@ -43,21 +66,10 @@ export default {
           }
         }
       };
-      // if (ui.isPendingRedirect()) {
         ui.start('#firebaseui-auth-container', config)
-        firebase.auth().onAuthStateChanged((user) => {
-            if(user) {
-              // console.log('poing!');
-              this.$store.dispatch('signUserUp', user)
-                this.$router.push('/')
-            }
-        //     // } else {
-        //     // }
-        })
-      // }
+      }
     }
   }
-}
 </script>
 
 <style src="~/node_modules/firebaseui/dist/firebaseui.css"></style>
