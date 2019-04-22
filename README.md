@@ -8,15 +8,22 @@
 # install dependencies
 $ yarn install
 
-# serve with hot reload at localhost:3000
-$ yarn run dev
+### To start a development server:
 
-# build for production and launch server
-$ yarn run build
-$ yarn start
+If you use [Yarn](https://yarnpkg.com/en/) (strongly recommended):
 
-# generate static project
-$ yarn run generate
-```
+`yarn electron:serve`
 
-For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+or if you use NPM:
+
+`npm run electron:serve`
+
+### To build your app:
+
+With Yarn:
+
+`yarn electron:build`
+
+or with NPM:
+
+`npm run electron:build`
