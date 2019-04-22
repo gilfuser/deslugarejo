@@ -58,7 +58,8 @@ typings/
 
 # dotenv environment variables file
 .env
-envars.ja
+.env.local
+envars.js
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -87,3 +88,19 @@ sw.*
 # lint stuff
 .eslintrc.js
 .prettierrc
+
+# electron stuff
+/dist
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+#Electron-builder output
+/dist_electron
+dist_electron/
