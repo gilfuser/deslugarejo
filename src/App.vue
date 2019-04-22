@@ -3,9 +3,7 @@
     <TheNavbar />
     
     <v-content>
-    <!-- <keep-alive include="channels"> -->
       <router-view/>
-    <!-- </keep-alive> -->
     </v-content>
   </v-app>
 </template>
@@ -22,20 +20,8 @@ export default {
   data() {
     return {
       title: "Deslugarejo",
-      // name: null,
       user: null
     };
-  },
-  computed: {
-    // userAuthenticated() {
-    //   return (!!this.$store.state.signedIn )
-    // },
-    // channelCreated () {
-    //   return this.$store.state.createdChannel.label
-    // }
-    // ...mapGetters([
-    //   'user/name',
-    // ])
   },
   mounted () {
     let that = this

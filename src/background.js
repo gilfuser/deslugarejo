@@ -1,85 +1,9 @@
 'use strict'
 
 const path = require('path')
-// const OSC = require('osc-js')
-// const url = require('url')
-// const Server = require('./server');
-// const options = require('./options');
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
-//--------------------------------------------------
-//  Bi-Directional OSC messaging Websocket <-> UDP
-//--------------------------------------------------
-// const osc = require('osc')
-// const WebSocket = require('ws');
 
-// const getIPAddresses = function () {
-//   const os = require("os")
-//   const interfaces = os.networkInterfaces()
-//   let ipAddresses = [];
-//     for (let deviceName in interfaces){
-//         let addresses = interfaces[deviceName];
-//         for (let i = 0; i < addresses.length; i++) {
-//             let addressInfo = addresses[i];
-//             if (addressInfo.family === "IPv4" && !addressInfo.internal) {
-//                 ipAddresses.push(addressInfo.address);
-//             }
-//         }
-//     }
-//     return ipAddresses;
-// };
-
-// let udp = new osc.UDPPort({
-//     localAddress: "0.0.0.0",
-//     localPort: 7400,
-//     remoteAddress: "127.0.0.1",
-//     remotePort: 57120
-// });
-
-// udp.on("ready", function () {
-//     var ipAddresses = getIPAddresses();
-//     console.log("Listening for OSC over UDP.");
-//     ipAddresses.forEach(function (address) {
-//         console.log(" Host:", address + ", Port:", udp.options.localPort);
-//     });
-//     console.log("Broadcasting OSC over UDP to", udp.options.remoteAddress + ", Port:", udp.options.remotePort);
-// });
-
-// var wss = new WebSocket.Server({
-//     port: 8081
-// });
-
-// wss.on("connection", function (socket) {
-//     console.log("A Web Socket connection has been established!");
-//     var socketPort = new osc.WebSocketPort({
-//         socket: socket
-//     });
-// // eslint-disable-next-line
-//     var relay = new osc.Relay(udp, socketPort, {
-//         raw: true
-//     });
-// });
-
-//   udp.open();
-
-//   udp.on("ready", function () {
-//     console.log("ready");
-//     setInterval(function () {
-//         console.log("sending osc...");
-//         udp.send({
-//             address: "/sending/every/second",
-//             args: [1, 2, 3]
-//         })
-//     }, 5000);
-// });
-
-// // Listen for incoming OSC bundles.
-// udp.on("bundle", function (oscBundle, timeTag, info) {
-//     console.log("An OSC bundle just arrived for time tag", timeTag, ":", oscBundle);
-//     console.log("Remote info is: ", info);
-// });
-
-// const server = new Server(options);
 const isDevelopment = process.env.NODE_ENV !== 'production'
 let win
 const devServer = process.env.WEBPACK_DEV_SERVER_URL
@@ -99,7 +23,6 @@ function createWindow () {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
-    // server = http.createServer('app://./index.html')
   }
   win.on('closed', () => {
     win = null
@@ -113,8 +36,6 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-
-  // server.stop();
 })
 
 app.on('activate', () => {
@@ -124,11 +45,6 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-// const config = { udpClient: { port: 57120 } }
-// const osc = new OSC({ plugin: new OSC.BridgePlugin(config) })
-
-// osc.open() // start a WebSocket server on port 8080
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -143,10 +59,6 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-
-  // udp.open();
-  // server.start();
-  // server.hello();
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -163,5 +75,3 @@ if (isDevelopment) {
     })
   }
 }
-
-// http.listen(PORT, () => { console.log(`Server started on port ${PORT}`); });
