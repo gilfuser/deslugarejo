@@ -4,8 +4,8 @@
 
 ## Build Setup
 
-``` bash
-# install dependencies
+### install dependencies
+
 $ yarn install
 
 ### To start a development server:
