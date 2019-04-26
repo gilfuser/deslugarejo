@@ -138,7 +138,7 @@
             host: null,
             port: null
           },
-          isJoined: false
+          isJoined: true
           }
         // console.log('this channel: ', this.channel);
         // this.swarm = this.$store.getters.swarm
@@ -152,7 +152,6 @@
           // this.$store.commit('setChannel', this.channel)
           this.$router.push(this.channel.to)
           this.writeToFirestore()
-          console.log('this channel to', this.channel.to);
           this.$store.commit('channels/add', this.channel)
           // this.$store.dispatch('onCreateSwarm', this.channel)
           // this.$store.state.channel = this.title

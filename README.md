@@ -8,9 +8,9 @@
 
 $ yarn install
 
-### To start a development server:
+### To start a development server
 
-If you use [Yarn](https://yarnpkg.com/en/) (strongly recommended):
+If you use [Yarn](https://yarnpkg.com/en/):
 
 `yarn electron:serve`
 
@@ -18,7 +18,7 @@ or if you use NPM:
 
 `npm run electron:serve`
 
-### To build your app:
+### To build your app
 
 With Yarn:
 

@@ -19,8 +19,8 @@
           </v-card-text>
           <v-card-actions>
             <v-btn color="primary" depressed type="submit"
-            class="mx-1" @click="onJoinChannel" 
-            :disabled="channel.isJoined || channel.uuid == $store.getters.name"
+            class="mx-1" 
+            :disabled="isJoined"
             >
               Join Channel
             </v-btn>
@@ -34,11 +34,24 @@
   export default {
     name: 'remoteChannel',
     props: { channel: Object },
+    computed: {
+      isJoined() {
+        let remoteChannels = this.$store.getters['channels/remoteChannels']
+        let index = remoteChannels.findIndex(channel => channel.title === this.channel.title)
+        if (index !== -1) {
+          return remoteChannels[index].joinedIn.includes(this.$store.getters.name)
+        } else {
+          return false
+        }
+      }
+    },
     methods: {
       onJoinChannel () {
-        this.$store.commit('channels/setInitiator', false)
-        // this.$store.commit('joinChannel', this.channel)
-        // this.$router.push(`/channels/${this.channel.title}`)
+        // this.$store.commit('channels/setInitiator', false)
+        // this.$store.commit('channels/joinChannel', this.channel)
+        this.$store.dispatch('channels/joinIn', this.channel)
+        // console.log('this channel is joined: ', this.channel.isJoined)
+        // this.$router.push(this.channel.to)
       }
     },
   }

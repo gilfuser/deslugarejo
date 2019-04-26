@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { fireDb } from '../../firebase'
+import firebase from 'firebase/firebase'
 const channelsRef = fireDb.collection('channels')
 
 export default {
@@ -53,10 +54,16 @@ export default {
       } else if (state.initiator === false) {
         const index = state.remoteChannels.findIndex(channel => channel.title === payload.title)
         if (index !== -1) {
-          state.hannels.splice(index, 1)
+          state.remoteChannels.splice(index, 1)
         }
       }
-    }
+    },
+    joinChannel (state, payload) {
+        const index = state.joinedChannels.findIndex(channel => channel.title === payload.title)
+        if (index === -1) {
+          state.joinedChannels.unshift(payload)
+        }
+    },
   },
   // 2. component monitors the state through getter 
   getters: {
@@ -93,7 +100,7 @@ export default {
           const payload = {
             // id: change.doc.id,
             title: change.doc.data().title,
-            to: `/channels/${this.title}`,
+            to: change.doc.data().to,
             uuid: change.doc.data().uuid,
             type: change.doc.data().type,
             joinedIn: change.doc.data().joinedIn,
@@ -143,6 +150,26 @@ export default {
         .catch(err => {
           console.error('Error removing document: ', err)
         })
+    },
+    joinIn ({state, commit, rootState}, payload) {
+      const index = state.remoteChannels.findIndex(channel => channel.title === payload.title)
+      if (index !== -1 && !state.remoteChannels[index].joinedIn.includes(rootState.name)) {
+        state.remoteChannels[index].joinedIn.push(rootState.name)
+        channelsRef.doc(payload.title).update({
+          joinedIn: state.remoteChannels[index].joinedIn
+        }).then(() => {
+            // Do not mutate vuex store state outside mutation handlers.
+          })
+          .catch(err => {
+            console.error('Error updating document: ', err)
+          })
+        }
+      commit('joinChannel', payload)
+    },
+    isLeft (rootState, payload) {
+      channelsRef.doc(payload.title).update({
+        isJoined: firebase.firestore.FieldValue.arrayRemove(rootState.name)
+      })
     }
   }
 }
