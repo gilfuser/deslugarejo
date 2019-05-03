@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
-// import { createPersistedState, createSharedMutations } from "vuex-electron"
 import createPersistedState from "vuex-persistedstate";
 import Cookies from "js-cookie";
 import channel from '@/store/modules/Channel'
 import channels from '@/store/modules/Channels'
-import swarm from '@/store/modules/Swarm'
+// import swarm from '@/store/modules/Swarm'
 import user from '@/store/modules/User'
 import osc from '@/store/modules/Osc'
 
@@ -15,7 +14,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   plugins: [
     createPersistedState({
-      // paths: ["user"],
+      // paths: ["index", "modules/Channels", 'modules/Osc'],
       storage: {
         getItem: key => Cookies.get(key),
         setItem: (key, value) =>
@@ -23,13 +22,11 @@ export default new Vuex.Store({
         removeItem: key => Cookies.remove(key)
       }
     })
-    //   createPersistedState(),
-  //   createSharedMutations()
   ],
   modules: {
     channel,
     channels,
-    swarm,
+    // swarm,
     user,
     osc
   },

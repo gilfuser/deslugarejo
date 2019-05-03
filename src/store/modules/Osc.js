@@ -1,65 +1,33 @@
-//--------------------------------------------------
-//  Bi-Directional OSC messaging Websocket <-> UDP
-//--------------------------------------------------
-
-const osc = require('osc')
-const os = require("os")
+import osc from 'osc'
+import os from 'os'
 
 export default {
   namespaced: true,
   state () {
     return {
-      channel: null,
-      channels:[
-        {
-          title: 'chanchan',
-          oscPort: null,
-        }
-      ],
-      localAddress: '0.0.0.0',
-      localPort: 7400,
-      remoteAddress: '127.0.0.1',
-      remotePort: 57120,
-      // ipAddresses: null
+      ports:[],
     }
   },
   mutations: {
-    setRemotePort (state, payload) {
-      state.remotePort = payload
-    },
-    setRemoteAddress (state, payload) {
-      state.remoteAddress = payload
-    },
-    setIpAddress (state, payload) {
-      state.ipAddresses = payload
-    },
     add (state, payload) {
-      const index = state.channels.findIndex(channel => channel.title === payload.title)
+      const index = state.ports.findIndex(port => port.title === payload.title)
       if (index === -1) {
-        state.channels.unshift(payload)
+        state.ports.unshift(payload)
       }
     },
-    clear: state => state.channels = [],
-    // set (state, payload) {
-    //   const index = state.channels.findIndex(channel => channel.title === payload.title)
-    //   if (index !== -1) {
-    //     state.channels[index].oscPortSettings = payload.oscPortSettings
-    //   }
-    // },
+    clear: state => state.ports = [],
     remove (state, payload) {
-      const index = state.channels.findIndex(channel => channel.title === payload.title)
+      const index = state.ports.findIndex(port => port.title === payload.title)
       if (index !== -1) {
-        state.channels.splice(index, 1)
+        state.ports.splice(index, 1)
       }
     },
-    setChannel (state, payload) {
-      state.channel = state.channels.find(channel => channel.title === payload)
-    },
-    setOscPort (state, payload) {
-      const index = state.channels.findIndex(channel => channel.title === payload.title)
+    set (state, payload) {
+      const index = state.ports.findIndex(port => port.title === payload.title)
       if (index !== -1) {
-        state.channels[index].oscPort = payload.oscPort
-        const oscPort = state.channels[index].oscPort
+        state.ports[index].oscPort = payload.oscPort
+        const oscPort = state.ports[index].oscPort
+        // const msgOut = 
         oscPort.open()
         oscPort.on("ready", function () {
         console.log("Listening for OSC over UDP.");
@@ -68,38 +36,38 @@ export default {
           })
           console.log("Broadcasting OSC over UDP to", oscPort.options.remoteAddress + ", Port:", oscPort.options.remotePort)
           oscPort.on('message', function (oscMessage) {
-            // (message).text(JSON.stringify(oscMessage, undefined, 2));
+            state.ports[index].msgOut = oscMessage
             console.log('message: ', oscMessage)
           })
         })
-        //eslint-disable-next-line
-        state.channels[index].sendMsg = payload.sendMsg
+        state.ports[index].sendMsg = payload.sendMsg
       }
-    }
+    },
   },
   getters: {
-    remoteAddress: state => state.remoteAddress,
-    remotePort: state => state.remotePort,
-    ipAddresses: state => state.ipAddresses,
     oscPort: state => payload => {
-      const index = state.channels.findIndex(channel => channel.title === payload)
+      const index = state.ports.findIndex(port => port.title === payload)
       if (index !== -1) {
-        state.channels[index].oscPort
+        return state.ports[index].oscPort
+      }
+    },
+    msgOut: state => payload => {
+      const index = state.ports.findIndex(port => port.title === payload)
+      if (index !== -1) {
+        return state.ports[index].msgOut
       }
     }
   },
   actions: {
-    sendMsg({ state }, payload) {
-      const index = state.channels.findIndex(channel => channel.title === payload.title)
+    msgIn({ state }, payload) {
+      const index = state.ports.findIndex(port => port.title === payload.title)
       if (index !== -1) {
-        const port = state.channels[index].oscPort
-        const sendMsg = state.channels[index].sendMsg
-        // send(payload.msg)
+        const port = state.ports[index].oscPort
+        const sendMsg = state.ports[index].sendMsg
         sendMsg(port, payload.msg)
-        // console.log('type of sendMsg ', typeof send);
       }
     },
-    createOscPort({ commit, getters }, payload) {
+    createOscPort({ commit }, payload) {
       const interfaces = os.networkInterfaces()
       let ipAddresses = [];
       for (let deviceName in interfaces){
@@ -111,18 +79,26 @@ export default {
           }
         }
       }
-      commit('setOscPort', {
-        title: payload,
+      commit('add', {
+        title: payload.title,
+        oscPort: null,
+        msgOut: {
+          addr: null,
+          args: null
+        },
+        swarm: false,
+      })
+      commit('set', {
+        title: payload.title,
         oscPort: new osc.UDPPort({
-          localAddress: "0.0.0.0",
+          localAddress: '0.0.0.0',
           localPort: 7400,
-          remoteAddress: getters.remoteAddress,
-          remotePort: getters.remotePort,
+          remoteAddress: payload.remoteAddress,
+          remotePort: payload.remotePort,
         }),
-        ipAddresses,
+        ipAddresses: ipAddresses,
         sendMsg: function (port, msg) {
             port.send(msg)
-            // console.log('this port is ', port, 'msg: ', msg)
           }
       })
       }

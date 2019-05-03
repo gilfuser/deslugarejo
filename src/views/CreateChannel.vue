@@ -72,7 +72,6 @@
   // import { required, minLength, maxLength } from "vuelidate/lib/validators"
   import {fireDb} from '../firebase'
   import { /*mapGetters,*/  mapMutations } from 'vuex'
-  import axios from 'axios'
 
   export default {
     name: 'createChannel',
@@ -124,45 +123,22 @@
         // this.$store.commit('createChannel', this.channel)
         this.channel = {
           title: this.title,
-          oscPort: null,
-          sendMsg: null,
           to: `/channels/${this.title}`,
           uuid: this.$store.getters.name,
           type: this.type,
           initiator: true,
-          swarm: false,
           description: this.description,
           releasedAt: this.date,
           joinedIn: [this.$store.getters.name],
-          oscClient: {
-            host: null,
-            port: null
-          },
           isJoined: true
           }
-        // console.log('this channel: ', this.channel);
-        // this.swarm = this.$store.getters.swarm
-        // this.$emit('setSwarm', that.swarm)
-        // this.$emit('signaling', 'connecting...')
-        // let that = this
-        axios.get(`https://serversignaling.herokuapp.com`)
-        // eslint-disable-next-line 
-        .then((response) => {
           this.$store.commit('channels/setInitiator', true)
-          // this.$store.commit('setChannel', this.channel)
-          this.$router.push(this.channel.to)
           this.writeToFirestore()
           this.$store.commit('channels/add', this.channel)
-          // this.$store.dispatch('onCreateSwarm', this.channel)
-          // this.$store.state.channel = this.title
-        }).catch((error) => {
-          console.log('An error occurred: ', error)
-        });
-        // }
+          this.$router.push(this.channel.to)
       },
       ...mapMutations({
         setInitiator: ('channels/setInitiator', true)
-      //   createChannel: 
       }),
       async writeToFirestore() {
         let that = this

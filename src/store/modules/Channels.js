@@ -64,20 +64,30 @@ export default {
           state.joinedChannels.unshift(payload)
         }
     },
+    swarm (state, payload) {
+      if (state.initiator === true) {
+        const index = state.createdChannels.findIndex(channel => channel.title === payload.title)
+        if (index !== -1) {
+          state.createdChannels[index].swarm = true
+        }
+      } else if (state.initiator === false) {
+        const index = state.remoteChannels.findIndex(channel => channel.title === payload.title)
+        if (index !== -1) {
+          state.createdChannels[index].swarm = true
+        }
+      }
+    },
   },
   // 2. component monitors the state through getter 
   getters: {
-    createdChannels (state) {
-        return state.createdChannels
-    },
-    remoteChannels (state) {
-        return state.remoteChannels
-    },
-    loadChannel: state => channelTitle => {
+    initiator: state => state.initiator,
+    createdChannels: state => state.createdChannels,
+    remoteChannels: state => state.remoteChannels,
+    loadChannel(state, payload) {
       if (state.initiator === true) {
-        return state.createdChannels.find(channel => channel.title === channelTitle)
+        return state.createdChannels.find(channel => channel.title === payload)
       } else if (state.initiator === false) {
-        return state.remoteChannels.find(channel => channel.title === channelTitle)
+        return state.remoteChannels.find(channel => channel.title === payload)
       }
     },
     joinedChannels: state => state.joinedChannels
@@ -104,10 +114,6 @@ export default {
             uuid: change.doc.data().uuid,
             type: change.doc.data().type,
             joinedIn: change.doc.data().joinedIn,
-            // oscClient: {
-            //   host: change.doc.data().host,
-            //   port: change.doc.data().port
-            // },
             description: change.doc.data().description,
             releasedAt: new Date(change.doc.data().releasedAt.seconds * 1000)
           }
