@@ -127,7 +127,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import firebase from 'firebase/app'
 
 export default {
   name: 'theNavBar',
@@ -155,17 +154,17 @@ export default {
     setInitFalse () {
       this.$store.commit('channels/setInitiator', false)
     },
-    logInOut (title) {
-      if (title === 'Log Out') {
-        firebase.auth().signOut().then(() => {
-          this.$store.commit('user/setUser', null)
-          this.$store.commit('setName', null)
-          this.$store.commit('isSignedIn', false)
-          this.$store.dispatch('logOutIn')
-          this.$router.replace('/')
-        })
-      }
-    }
+  //   logInOut (title) {
+  //     // if (title === 'Log Out') {
+  //     //   firebase.auth().signOut().then(() => {
+  //     //     this.$store.commit('user/setUser', null)
+  //         this.$store.commit('setName', null)
+  //     //     this.$store.commit('isSignedIn', false)
+  //     //     this.$store.dispatch('logOutIn')
+  //     //     this.$router.replace('/')
+  //     //   })
+  //     // }
+  //   }
   },
 };
 </script>

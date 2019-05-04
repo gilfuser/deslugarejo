@@ -29,9 +29,9 @@
 
           <v-card class="gray4 pb-3 mt-4">
             <v-expand-transition>
-              <firebase-ui
+              <!-- <firebase-ui
               v-show="name.length > 0"
-              />
+              /> -->
             </v-expand-transition>
           </v-card>
           </v-flex>
@@ -42,11 +42,11 @@
 </template>
 
 <script>
-  import FirebaseUi from '../components/FirebaseUi';
+  // import FirebaseUi from '../components/FirebaseUi';
 
   export default {
     components: {
-      FirebaseUi
+      // FirebaseUi
     },
     data: () => ({
       name: '',
@@ -62,7 +62,6 @@
       },
     },
     // mounted() {
-    //   return console.log('ASDIUPZPSIFUZSFPIOAUSZFAPSIU')
     // },
   }
 </script>

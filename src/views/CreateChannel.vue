@@ -70,7 +70,6 @@
 <script>
   // import { validationMixin } from "vuelidate"
   // import { required, minLength, maxLength } from "vuelidate/lib/validators"
-  import {fireDb} from '../firebase'
   import { /*mapGetters,*/  mapMutations } from 'vuex'
 
   export default {
@@ -140,17 +139,17 @@
       ...mapMutations({
         setInitiator: ('channels/setInitiator', true)
       }),
-      async writeToFirestore() {
-        let that = this
-        const ref = fireDb.collection("channels").doc(this.title)
-        try {
-          await ref.set(that.channel)
-        } catch (e) {
-          // TODO: error handling
-          console.error(e)
-        }
-        // this.writeSuccessful = true
-      }
+      // async writeToFirestore() {
+      //   let that = this
+      //   const ref = fireDb.collection("channels").doc(this.title)
+      //   try {
+      //     await ref.set(that.channel)
+      //   } catch (e) {
+      //     // TODO: error handling
+      //     console.error(e)
+      //   }
+      //   // this.writeSuccessful = true
+      // }
     },
   }
 </script>

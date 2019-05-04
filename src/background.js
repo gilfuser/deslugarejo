@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path')
+// const path = require('path')
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 

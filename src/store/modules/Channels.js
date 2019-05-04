@@ -1,7 +1,4 @@
 /* eslint-disable */
-import { fireDb } from '../../firebase'
-import firebase from 'firebase/firebase'
-const channelsRef = fireDb.collection('channels')
 
 export default {
   namespaced: true,
@@ -104,32 +101,32 @@ export default {
         this.unsubscribe = null
       }
       // 3. retrieving channels from Firestore 
-      this.unsubscribe = channelsRef.orderBy('releasedAt', 'asc').onSnapshot(querySnapshot => {
-        // 6 . channels is called each time it is updated 
-        querySnapshot.docChanges().forEach(change => {
-          const payload = {
-            // id: change.doc.id,
-            title: change.doc.data().title,
-            to: change.doc.data().to,
-            uuid: change.doc.data().uuid,
-            type: change.doc.data().type,
-            joinedIn: change.doc.data().joinedIn,
-            description: change.doc.data().description,
-            releasedAt: new Date(change.doc.data().releasedAt.seconds * 1000)
-          }
-          // 4. Update state through mutation 
-          if (change.type === 'added') {
-            commit('add', payload)
-          } else if (change.type === 'modified') {
-            commit('set', payload)
-          } else if (change.type === 'removed') {
-            commit('remove', payload)
-          }
-        })
-      },
-      (error) => {
-        console.error(error.name)
-      })
+      // this.unsubscribe = channelsRef.orderBy('releasedAt', 'asc').onSnapshot(querySnapshot => {
+      //   // 6 . channels is called each time it is updated 
+      //   querySnapshot.docChanges().forEach(change => {
+      //     const payload = {
+      //       // id: change.doc.id,
+      //       title: change.doc.data().title,
+      //       to: change.doc.data().to,
+      //       uuid: change.doc.data().uuid,
+      //       type: change.doc.data().type,
+      //       joinedIn: change.doc.data().joinedIn,
+      //       description: change.doc.data().description,
+      //       releasedAt: new Date(change.doc.data().releasedAt.seconds * 1000)
+      //     }
+      //     // 4. Update state through mutation 
+      //     if (change.type === 'added') {
+      //       commit('add', payload)
+      //     } else if (change.type === 'modified') {
+      //       commit('set', payload)
+      //     } else if (change.type === 'removed') {
+      //       commit('remove', payload)
+      //     }
+      //   })
+      // },
+      // (error) => {
+      //   console.error(error.name)
+      // })
     },
     // 8. リスナーの停止
     stopListener () {
@@ -140,42 +137,42 @@ export default {
       }
     },
     addchannel ({ commit }, payload) {
-      channelsRef.add(payload)
-        .then(doc => {
-          // Do not mutate vuex store state outside mutation handlers.
-        })
-        .catch(err => {
-          console.error('Error adding document: ', err)
-        })
+      // channelsRef.add(payload)
+      //   .then(doc => {
+      //     // Do not mutate vuex store state outside mutation handlers.
+      //   })
+      //   .catch(err => {
+      //     console.error('Error adding document: ', err)
+      //   })
     },
     deletechannel ({ commit }, payload) {
-      channelsRef.doc(payload.title).delete()
-        .then(() => {
-          // Do not mutate vuex store state outstitlee mutation handlers.
-        })
-        .catch(err => {
-          console.error('Error removing document: ', err)
-        })
+      // channelsRef.doc(payload.title).delete()
+      //   .then(() => {
+      //     // Do not mutate vuex store state outstitlee mutation handlers.
+      //   })
+      //   .catch(err => {
+      //     console.error('Error removing document: ', err)
+      //   })
     },
     joinIn ({state, commit, rootState}, payload) {
       const index = state.remoteChannels.findIndex(channel => channel.title === payload.title)
       if (index !== -1 && !state.remoteChannels[index].joinedIn.includes(rootState.name)) {
         state.remoteChannels[index].joinedIn.push(rootState.name)
-        channelsRef.doc(payload.title).update({
-          joinedIn: state.remoteChannels[index].joinedIn
-        }).then(() => {
-            // Do not mutate vuex store state outside mutation handlers.
-          })
-          .catch(err => {
-            console.error('Error updating document: ', err)
-          })
+        // channelsRef.doc(payload.title).update({
+        //   joinedIn: state.remoteChannels[index].joinedIn
+        // }).then(() => {
+        //     // Do not mutate vuex store state outside mutation handlers.
+        //   })
+        //   .catch(err => {
+        //     console.error('Error updating document: ', err)
+        //   })
         }
       commit('joinChannel', payload)
     },
     isLeft (rootState, payload) {
-      channelsRef.doc(payload.title).update({
-        isJoined: firebase.firestore.FieldValue.arrayRemove(rootState.name)
-      })
+      // channelsRef.doc(payload.title).update({
+      //   isJoined: firebase.firestore.FieldValue.arrayRemove(rootState.name)
+      // })
     }
   }
 }
